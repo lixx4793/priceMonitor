@@ -164,7 +164,7 @@ router.post("/sendNotifications", async(req, res) => {
         ${proHtml}
     </div>
     <br><p>Thank you!!!</p><p>Best,</p><p>Speeder Solutions Price Monitor</p>`;
-    let emailList = ["lixx4793@umn.edu"];
+    let emailList = ["lixx4793@umn.edu", "watercore@gmail.com", "zanlu1621@gmail.com"];
     console.log("sending email ----*********************");
     for(let ei = 0; ei < emailList.length; ei++) {
       let mailOptions = {
