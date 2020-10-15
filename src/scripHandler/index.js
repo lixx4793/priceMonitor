@@ -122,7 +122,7 @@ router.post("/updateProducts", async(req, res) => {
 router.post("/sendNotifications", async(req, res) => {
   let notifications = req.body.notification;
   let productList = req.body.productList;
-
+  let type = req.body.type;
   // for(let i = 0; i < notifications.length; i++) {
   //   try {
   //     if(notifications[i].pid == null) {
@@ -151,13 +151,22 @@ router.post("/sendNotifications", async(req, res) => {
       const curr = productList[i];
       let notification = "New Item Created";
       notification = checkType(curr.notificationType);
-      proHtml +=  `<div style="margin-bottom: 15px">
-        <span>Product: ${curr.productTitle} </span><br/>
-        <span>New Price: ${curr.currentPrice} </span> <br />
-        <span>Old Price: ${curr.oldPrice} </span><br/>
-        <span>Link: <a href = ${curr.productInfoUrl} > Click HERE </a></span> <br/>
-      </div>`
-
+      if(type != null && type == "newItem") {
+        proHtml +=  `<div style="margin-bottom: 15px">
+          <span>Product: ${curr.productTitle} </span><br/>
+          <span>New Price: ${curr.currentPrice} </span> <br />
+          type:<span style = "color: limegreen"> New Product </span><br/>
+          <span>discount: ${curr.discountDes} </span> <br/>
+          <span>Link: <a href = ${curr.productInfoUrl} > Click HERE </a></span> <br/>
+        </div>`
+      } else {
+        proHtml +=  `<div style="margin-bottom: 15px">
+          <span>Product: ${curr.productTitle} </span><br/>
+          <span>New Price: ${curr.currentPrice} </span> <br />
+          <span>Old Price: ${curr.oldPrice} </span><br/>
+          <span>Link: <a href = ${curr.productInfoUrl} > Click HERE </a></span> <br/>
+        </div>`
+      }
     }
     let htmlP = `
      <div>
@@ -168,7 +177,7 @@ router.post("/sendNotifications", async(req, res) => {
     console.log("sending email ----*********************");
     for(let ei = 0; ei < emailList.length; ei++) {
       let mailOptions = {
-        from: `priceMonitor2@speedersolutions.com`, // sender address
+        from: `priceMonitor3@speedersolutions.com`, // sender address
         to: emailList[ei], // list of receivers
         subject: `Price Monitor Notifications`, // Subject line
         text: '', // plain text body
@@ -228,7 +237,6 @@ function checkType(notificationType) {
        notification = "探测到商家有新的特殊提示"
        break;
     default:
-      console.log("default case: " + notificationType);
 
   }
   return notification;
