@@ -57,10 +57,10 @@ router.post("/createNewProducts", async(req, res) => {
       let newProduct = await models.Product.create(productList[i], {logging: console.log});
       notifications.push(newProduct);
     }catch(e) {
-      console.log("can not create product,m skip");
+      console.log(productList[i]);
+      console.log(e);
       continue;
     }
-
   }
   res.send({
     status: true,
@@ -156,7 +156,8 @@ router.post("/sendNotifications", async(req, res) => {
           <span>Product: ${curr.productTitle} </span><br/>
           <span>New Price: ${curr.currentPrice} </span> <br />
           type:<span style = "color: limegreen"> New Product </span><br/>
-          <span>discount: ${curr.discountDes} </span> <br/>
+          <span>discount des: ${curr.discountDes} </span> <br/>
+          <span>Stock Info: ${curr.stockInfo == null ? "Unknown" : curr.stockInfo} </span><br/>
           <span>Link: <a href = ${curr.productInfoUrl} > Click HERE </a></span> <br/>
         </div>`
       } else {
@@ -164,6 +165,7 @@ router.post("/sendNotifications", async(req, res) => {
           <span>Product: ${curr.productTitle} </span><br/>
           <span>New Price: ${curr.currentPrice} </span> <br />
           <span>Old Price: ${curr.oldPrice} </span><br/>
+          <span>Stock Info: ${curr.stockInfo == null ? "Unknown" : curr.stockInfo} </span><br/>
           <span>Link: <a href = ${curr.productInfoUrl} > Click HERE </a></span> <br/>
         </div>`
       }
@@ -183,7 +185,7 @@ router.post("/sendNotifications", async(req, res) => {
         text: '', // plain text body
         html: htmlP
       };
-      await transporter.sendMail(mailOptions);
+      // await transporter.sendMail(mailOptions);
     }
 
   // send mail with defined transport object
