@@ -3,7 +3,7 @@ let sequelize = require('../sequelize');
 let product = sequelize.define('product', {
   pid: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
   sid: {type: DataTypes.INTEGER, references: {modal:'webSource', key: "sourceId"}, unique: 'compositeIndex'},
-  productTitle: {type: DataTypes.STRING, allowNull: false},
+  productTitle: {type: DataTypes.STRING, allowNull: false, unique: true},
   url: {type: DataTypes.STRING, allowNull:false},
   productInfoUrl: {type: DataTypes.STRING, allowNull: false, unique: 'compositeIndex'},
   currentPrice: {type: DataTypes.DECIMAL(10,2), allowNull: false},
