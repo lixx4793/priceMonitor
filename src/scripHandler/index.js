@@ -54,7 +54,7 @@ router.post("/createNewProducts", async(req, res) => {
   let productList = req.body.productList;
   for(let i = 0; i < productList.length; i++) {
     try {
-      let newProduct = await models.Product.create(productList[i], {logging: console.log});
+      let newProduct = await models.Product.create(productList[i]);
       notifications.push(newProduct);
     }catch(e) {
       console.log(productList[i]);
@@ -144,11 +144,16 @@ router.post("/sendNotifications", async(req, res) => {
     // sendEmail(notifications);
 
 
-
+  let count = 0;
   try {
     let proHtml = ``;
     for (let i = 0; i < productList.length; i++) {
       const curr = productList[i];
+      if(curr.currentPrice == -1) {
+        // skip notification when it is out of stock
+        continue;
+      }
+      count++;
       let notification = "New Item Created";
       notification = checkType(curr.notificationType);
       if(type != null && type == "newItem") {
@@ -170,6 +175,10 @@ router.post("/sendNotifications", async(req, res) => {
         </div>`
       }
     }
+    if(count == 0) {
+      console.log("no notification to send");
+      return;
+    }
     let htmlP = `
      <div>
         ${proHtml}
@@ -185,7 +194,7 @@ router.post("/sendNotifications", async(req, res) => {
         text: '', // plain text body
         html: htmlP
       };
-      // await transporter.sendMail(mailOptions);
+      await transporter.sendMail(mailOptions);
     }
 
   // send mail with defined transport object
