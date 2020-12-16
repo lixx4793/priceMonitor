@@ -185,8 +185,9 @@ router.post('/upsertAccount', async(req, res) => {
       where: {
         accountId: accountId,
         cardId: { $notIn: cardIdArray }
-      }
-    }, {transaction: transaction, logging: console.log})
+      },
+      transaction: transaction, logging: console.log
+    })
   } catch(e) {
     console.log("unable to delete acmap");
     console.log(e);
