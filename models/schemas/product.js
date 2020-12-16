@@ -14,7 +14,8 @@ let product = sequelize.define('product', {
   discountDes: {type: DataTypes.STRING},
   stockInfo: {type: DataTypes.STRING},
   imageSrc: {type: DataTypes.STRING},
-  active: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1}
+  active: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1},
+  targetPrice: {type: DataTypes.DECIMAL(10,2)}
 
 });
 
