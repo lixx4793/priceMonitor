@@ -77,7 +77,6 @@ router.post("/updateProducts", async(req, res) => {
     const curr = productList[i];
     let res = null;
     const updateInfo = {
-      url: curr.url,
       productInfoUrl: curr.productInfoUrl,
       currentPrice: curr.currentPrice,
       oldPrice: curr.oldPrice,
