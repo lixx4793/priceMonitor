@@ -22,11 +22,14 @@ app.use("/api", scripHandlerRouter);
 app.use("/api/priceManager", scripManagerRouter);
 app.use("/api/authendication", scripAuthendication);
 app.use("/api/accountManager", accountManager);
-app.get("/", (req, res) => {
-    res.status(200).send({
-      welcomeMessage: "Welcome to this api",
-      Author: "Yuhao Li"
-    })
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, '../build/' + 'index.html'));
+});
+app.get('/priceManager', function (req, res) {
+    res.sendFile(path.join(__dirname, '../build/' + 'index.html'));
+});
+app.get('/accountManager', function (req, res) {
+    res.sendFile(path.join(__dirname, '../build/' + 'index.html'));
 });
 
 app.listen(port, () => {
