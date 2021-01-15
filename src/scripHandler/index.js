@@ -176,7 +176,9 @@ router.post("/sendNotifications", async(req, res) => {
     }
     if(count == 0) {
       console.log("no notification to send");
-      return;
+        return res.send({
+          status: true
+        });
     }
     let htmlP = `
      <div>
