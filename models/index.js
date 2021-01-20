@@ -7,6 +7,7 @@ const account = exports.Account = require("./schemas/account");
 const card = exports.Card = require("./schemas/card");
 const acmap = exports.Acmap = require("./schemas/acmap");
 const record = exports.Record = require("./schemas/record");
+const externalLink = exports.ExternalLink = require("./schemas/externallink");
 
 
 product.belongsTo(webSource, {foreignKey: "sid", as:"productSourceFK"});

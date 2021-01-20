@@ -34,6 +34,31 @@ router.get("/fetchProduct", async(req, res) => {
   }
 });
 
+router.get("/fetchExternalLink", async(req, res) => {
+    if(req.query.funType == null) {
+        return res.status(500).send({
+            status: false,
+            error: "Invalid Params"
+        })
+    }
+    let result;
+    try {
+        result = await models.ExternalLink.findAll({
+            where: {
+                funType: req.query.funType
+            }
+        })
+    } catch(e) {
+        return res.status(500).send({
+            status: false,
+            error: e
+        })
+    }
+    res.send({
+        data: result
+    })
+});
+
 router.get("/fetchWebSource", async(req, res) => {
   try {
     let sources = await models.WebSource.findAll();
@@ -48,6 +73,30 @@ router.get("/fetchWebSource", async(req, res) => {
     })
   }
 })
+
+router.post("/addNewExternalLinks", async(req, res) => {
+    const {
+        externalLinks,
+    } = req.body;
+    if(externalLinks == null || externalLinks.length == 0) {
+        return res.status(500).send({
+            status: false,
+            error: "Invalid Params"
+        });
+    }
+
+    for(let linkObj of externalLinks) {
+        try {
+            await models.ExternalLink.create(linkObj, {logging: console.log});
+        } catch(e) {
+            console.log("unable to add link ");
+            continue;
+        }
+    }
+    res.send({
+        status: true
+    })
+});
 
 router.post("/createNewProducts", async(req, res) => {
   let notifications = [];
@@ -121,6 +170,7 @@ router.post("/updateProducts", async(req, res) => {
 router.post("/sendNotifications", async(req, res) => {
   let notifications = req.body.notification;
   let productList = req.body.productList;
+  let isTest = req.body.test;
   let type = req.body.type;
   // for(let i = 0; i < notifications.length; i++) {
   //   try {
@@ -185,7 +235,12 @@ router.post("/sendNotifications", async(req, res) => {
         ${proHtml}
     </div>
     <br><p>Thank you!!!</p><p>Best,</p><p>Speeder Solutions Price Monitor</p>`;
-    let emailList = ["lixx4793@umn.edu", "watercore@gmail.com", "zanlu1621@gmail.com"];
+    let emailList
+    if(isTest === false) {
+        emailList = ["lixx4793@umn.edu", "watercore@gmail.com", "zanlu1621@gmail.com"];
+    } else {
+        emailList = ["lixx4793@umn.edu"]
+    }
     console.log("sending email ----*********************");
     for(let ei = 0; ei < emailList.length; ei++) {
       let mailOptions = {
