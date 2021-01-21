@@ -7,6 +7,7 @@ var bodyParser = require('body-parser')
 const scripHandlerRouter = require("./src/scripHandler");
 const scripManagerRouter = require("./src/scripManager");
 const scripAuthendication = require("./src/authendication");
+const itemControlRouter = require("./src/itemControl");
 const accountManager = require("./src/accountManager");
 const serveStatic = require('serve-static');
 const app = express();
@@ -22,6 +23,7 @@ app.use("/api", scripHandlerRouter);
 app.use("/api/priceManager", scripManagerRouter);
 app.use("/api/authendication", scripAuthendication);
 app.use("/api/accountManager", accountManager);
+app.use("/api/itemControl", itemControlRouter);
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '../build/' + 'index.html'));
 });
