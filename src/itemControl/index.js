@@ -37,16 +37,19 @@ router.post("/updateProduct", async(req, res) => {
     const {
         pid, targetPrice, active
     } = req.body;
-    if(pid == null || targetPrice == null || active == null) {
+    if(pid == null || active == null) {
         return res.status(500).send({
             message: "Invalid Params"
         })
     }
     try {
-        await models.Product.update({
-            targetPrice: targetPrice,
+        let updateItem = {
             active: active
-        }, {
+        }
+        if(targetPrice != null && targetPrice > 0) {
+            updateItem.targetPrice = targetPrice
+        }
+        await models.Product.update(updateItem, {
             where: {pid: pid},
             logging: console.log
         })

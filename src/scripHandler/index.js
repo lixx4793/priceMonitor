@@ -250,7 +250,7 @@ router.post("/sendNotifications", async(req, res) => {
         text: '', // plain text body
         html: htmlP
       };
-      await transporter.sendMail(mailOptions);
+      //await transporter.sendMail(mailOptions);
     }
 
   // send mail with defined transport object
