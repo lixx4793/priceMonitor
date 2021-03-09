@@ -15,8 +15,8 @@ let product = sequelize.define('product', {
   stockInfo: {type: DataTypes.STRING},
   imageSrc: {type: DataTypes.STRING},
   active: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 1},
-  targetPrice: {type: DataTypes.DECIMAL(10,2)}
-
+  targetPrice: {type: DataTypes.DECIMAL(10,2)},
+  automaticOrder: {type: DataTypes.INTEGER, defaultValue: 0, allowNull: false}
 });
 
 module.exports = product;
