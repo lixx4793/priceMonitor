@@ -18,7 +18,8 @@ let product = sequelize.define('product', {
   targetPrice: {type: DataTypes.DECIMAL(10,2)},
   automaticOrder: {type: DataTypes.INTEGER, defaultValue: 0, allowNull: false},
   note:  DataTypes.STRING,
-  autoOrderPrice: DataTypes.DECIMAL(10,2)
+  autoOrderPrice: DataTypes.DECIMAL(10,2),
+  accountOption: {type: DataTypes.STRING, defaultValue: null}
 });
 
 module.exports = product;

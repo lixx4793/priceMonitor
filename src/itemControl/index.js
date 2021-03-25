@@ -35,7 +35,7 @@ router.post("/fetchProduct", async(req, res) => {
 
 router.post("/updateProduct", async(req, res) => {
     const {
-        pid, targetPrice, active, automaticOrder
+        pid, targetPrice, active, automaticOrder, accountOption
     } = req.body;
     if(pid == null || active == null) {
         return res.status(500).send({
@@ -45,7 +45,8 @@ router.post("/updateProduct", async(req, res) => {
     try {
         let updateItem = {
             active: active,
-            automaticOrder
+            automaticOrder,
+            accountOption
         }
         if(targetPrice != null && targetPrice > 0) {
             updateItem.targetPrice = targetPrice
