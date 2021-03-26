@@ -118,6 +118,29 @@ router.post("/createNewProducts", async(req, res) => {
 })
 
 
+router.post("/changeProductPrice", async(req, res) => {
+    let list = req.body.list;
+    for(let product of list) {
+        try {
+            await models.Product.update({
+                currentPrice: product.currentPrice,
+                oldPrice: product.oldPrice,
+                discountDes: product.discountDes,
+                stockInfo: product.stockInfo
+            }, {
+                where: {pid: product.pid},
+                logging: console.log
+
+            });
+            console.log("price updated successfullly");
+        } catch(e) {
+            console.log(e)
+            console.log("-------Unable to update price ----- ")
+            continue
+        }
+    }
+})
+
 router.post("/updateProducts", async(req, res) => {
 
   let result = {}
