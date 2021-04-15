@@ -65,7 +65,7 @@ router.post("/checkUrl", async(req, res) => {
 
     const tagLocations = {
          productTitle: ".sku-title h1",
-         currentPrice: ".price-box.pricing-lib-price-8-2114-2 .priceView-hero-price.priceView-customer-price span",
+         currentPrice: ".price-box .priceView-hero-price.priceView-customer-price span",
          oldPrice: ".pricing-price__regular-price",
          discountInfo: ".pricing-price__savings",
          stockInfo: ".fulfillment-add-to-cart-button button",
@@ -82,7 +82,7 @@ router.post("/checkUrl", async(req, res) => {
         url: url,
         method: 'GET',
         headers: headers[funType],
-        timeout: 14000,
+        timeout: 20000,
     }
 
     try {
