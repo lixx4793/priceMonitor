@@ -9,6 +9,7 @@ const scripManagerRouter = require("./src/scripManager");
 const scripAuthendication = require("./src/authendication");
 const itemControlRouter = require("./src/itemControl");
 const accountManager = require("./src/accountManager");
+const linkControlRouter = require("./src/linkControl");
 const serveStatic = require('serve-static');
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/priceManager", scripManagerRouter);
 app.use("/api/authendication", scripAuthendication);
 app.use("/api/accountManager", accountManager);
 app.use("/api/itemControl", itemControlRouter);
+app.use("/api/linkControl", linkControlRouter);
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '../build/' + 'index.html'));
 });
