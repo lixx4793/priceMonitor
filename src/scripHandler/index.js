@@ -141,7 +141,6 @@ router.post("/changeProductPrice", async(req, res) => {
     }
     res.send({
       status: true,
-      data: result
     })
 })
 
