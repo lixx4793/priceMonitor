@@ -4,8 +4,13 @@ const models = require('../../models');
 const https = require('https');
 const axios = require('axios');
 const jsdom = require("jsdom");
+const querystring = require('querystring');
 
 const { JSDOM } = jsdom;
+const Bestbuy = require('bestbuy')({
+    key: "bphZ0xyGyrOJ436leIwRNKZF",
+    requestsPerSecond: 3
+});
 
 router.post("/checkUrl", async(req, res) => {
     const { funType, url } = req.body;
@@ -53,23 +58,8 @@ router.post("/checkUrl", async(req, res) => {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0",
         },
         "BSBEXT1": {
-          "authority": "www.bestbuy.com",
-          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-          "accept-encoding": "gzip, deflate, br",
-          "accept-language": "en-US,en;q=0.9",
-          "cache-control": "max-age=0",
-          "referer": "https://www.bestbuy.com",
-          "upgrade-insecure-requests": 1,
-        }
-    }
 
-    const tagLocations = {
-         productTitle: ".sku-title h1",
-         currentPrice: ".price-box .priceView-hero-price.priceView-customer-price span",
-         oldPrice: ".pricing-price__regular-price",
-         discountInfo: ".pricing-price__savings",
-         stockInfo: ".fulfillment-add-to-cart-button button",
-         imageSrc: ".primary-image"
+        }
     }
 
     if(headers[funType] == null) {
@@ -88,6 +78,23 @@ router.post("/checkUrl", async(req, res) => {
     try {
         if(funType == "AMAZEXT1") {
             throw new Error("Amazon Validation Currently Not Supported, Add Link Directly");
+        } else if(funType == "BSBEXT1") {
+            let skuIndex = url.indexOf("skuId=");
+            if(skuIndex >= 0) {
+                let paramsLink = url.substring(skuIndex);
+                let queryParams = querystring.parse(paramsLink);
+                let productResult = await Bestbuy.products("sku="+queryParams['skuId']);
+                if(!productResult){
+                    throw new Error("unable to find information on current sku id");
+                }
+                productResult = productResult.products[0];
+                fetched.title = productResult.name;
+                fetched.stock = productResult.orderable + " online: " + productResult.onlineAvailability;
+                fetched.image = productResult.image;
+                fetched.currentPrice = productResult.salePrice;
+            } else {
+                throw new Error("url must container skuid=");
+            }
         }
         let result = await axios(clientServerOptions);
         if(!result || result.status != 200) {
@@ -108,23 +115,9 @@ router.post("/checkUrl", async(req, res) => {
             fetched.image = walData.items[0].imageUrl;
             fetched.currentPrice = walData.items[0].primaryOffer.offerPrice;
         }
-        if(funType == "BSBEXT1") {
-            let pageData = result.data;
-            const { document } = (new JSDOM(pageData)).window;
-            try {
-                fetched.title = document.querySelector(tagLocations.productTitle).innerHTML;
-                fetched.stock = document.querySelector(tagLocations.stockInfo).innerHTML;
-                if(fetched.stock.includes("Add to Cart")) {
-                    fetched.stock = "In Stock"
-                }
-                fetched.image = document.querySelector(tagLocations.imageSrc).src;
-                fetched.currentPrice =document.querySelector(tagLocations.currentPrice).innerHTML;
-            } catch(e) {
-                console.log(e)
-                throw new Error("Unable to fetch content from this best buy page");
-            }
-        }
+
     } catch(e) {
+        console.log(e)
         return res.send({status: false, err: e.message})
     }
     res.send({status: true, data: fetched})
